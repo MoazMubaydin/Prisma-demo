@@ -4,7 +4,7 @@ const router = express.Router();
 const prisma = require("../db/index");
 
 router.post("/products", async (req, res, next) => {
-  const { name, description, price, quantity, category, imageUrl, seller } =
+  const { name, description, price, quantity, category, imageUrl, sellerId } =
     req.body;
 
   const newProduct = {
@@ -14,7 +14,7 @@ router.post("/products", async (req, res, next) => {
     quantity,
     category,
     imageUrl,
-    seller,
+    sellerId,
   };
   try {
     const product = await prisma.product.create({ data: newProduct });
@@ -27,7 +27,9 @@ router.post("/products", async (req, res, next) => {
 
 router.get("/products", async (req, res, next) => {
   try {
-    const products = await prisma.product.findMany();
+    const products = await prisma.product.findMany({
+      include: { author: true },
+    });
     res.status(200).json(products);
   } catch (error) {
     console.log("Error in GET // api/products", error);
@@ -40,6 +42,7 @@ router.get("/products/:productId", async (req, res, next) => {
   try {
     const product = await prisma.product.findUnique({
       where: { id: productId },
+      include: { author: true },
     });
     res.status(200).json(product);
   } catch (error) {
@@ -51,7 +54,7 @@ router.get("/products/:productId", async (req, res, next) => {
 router.patch("/products/:productId", async (req, res, next) => {
   const { productId } = req.params;
 
-  const { name, description, price, quantity, category, imageUrl, seller } =
+  const { name, description, price, quantity, category, imageUrl, sellerId } =
     req.body;
 
   const updatedProduct = {
@@ -61,7 +64,7 @@ router.patch("/products/:productId", async (req, res, next) => {
     quantity,
     category,
     imageUrl,
-    seller,
+    sellerId,
   };
   try {
     const product = await prisma.product.update({
