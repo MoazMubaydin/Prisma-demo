@@ -28,7 +28,7 @@ router.post("/products", async (req, res, next) => {
 router.get("/products", async (req, res, next) => {
   try {
     const products = await prisma.product.findMany({
-      include: { author: true },
+      include: { user: true },
     });
     res.status(200).json(products);
   } catch (error) {
@@ -42,7 +42,7 @@ router.get("/products/:productId", async (req, res, next) => {
   try {
     const product = await prisma.product.findUnique({
       where: { id: productId },
-      include: { author: true },
+      include: { user: true },
     });
     res.status(200).json(product);
   } catch (error) {
