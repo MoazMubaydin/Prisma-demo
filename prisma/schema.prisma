@@ -21,7 +21,7 @@ datasource db {
 model Product {
   id          String   @id @default(cuid())
   name        String
-  description String
+  description String?  @default("This product does not have a description.")
   price       Float
   quantity    Int      @default(0)
   category    String
