@@ -26,9 +26,11 @@ model Product {
   quantity    Int      @default(0)
   category    String
   imageUrl    String[]
-  seller      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  sellerId String
+  user     User   @relation(fields: [sellerId], references: [id])
 }
 
 model User {
@@ -39,4 +41,6 @@ model User {
   imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  Products Product[]
 }
